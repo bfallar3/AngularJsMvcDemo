@@ -18,8 +18,9 @@
                 controller: 'courseController'
             })
             .when('/editCourse/:id', {
-                templateUrl: 'Templates/editcourse.html',
-                controller: 'courseController'
+                templateUrl: 'Templates/editcourse.html'
+                /* the controller is intended to be omitted to use the existing ng-controller */
+                /* do not add the 'courseController' here to avoid new-ing it. */
             })
             .otherwise({ redirectTo: '/courses' });
     }]);
@@ -28,27 +29,32 @@
      * define the controller for the main app courses.
      */
     main.controller('courseController', function ($scope, $location, $route, $routeParams, courseFactory, courseService) {
-        $scope.courses = {};
+        $scope.courses = [];
         $scope.selectedCourse = {};
         $scope.newCourseId = '';
         $scope.newCourseCode = '';
         $scope.newCourseName = '';
         $scope.addform = {};
 
+        // load existing courses.
+        courseFactory.query().success(function (data) {
+            $scope.courses = data;
+        });
+
         // remove course.
         $scope.remove = function (index, id) {
             courseFactory.remove(id).success(function () {
                 $scope.courses.splice(index, 1);
-            });            
+            });
         };
 
         // submit new course.
         $scope.submit = function () {
             if (!$scope.addform.$invalid) {
                 courseFactory.add($scope.newCourseCode, $scope.newCourseName).success(function (resp) {
-                    $scope.courses.push({ "CourseId": $scope.newCourseId, "CourseCode": $scope.newCourseCode, "CourseName": $scope.newCourseName });
+                    $scope.courses.push({ "CourseCode": $scope.newCourseCode, "CourseName": $scope.newCourseName });
                     $location.path('#courses');
-                });                
+                });
             }
         };
 
@@ -71,21 +77,11 @@
             });
         };
 
-        activate();
-
-        function activate() {
-            //$scope.courses = courseService.courses;
-            courseFactory.query().success(function (data) {
-                $scope.courses = data;
-            });
-        };
-        
-        // register handler when view is loaded.
+        //register handler when view is loaded.
         $scope.$on('$viewContentLoaded', function () {
-            var template = $route.current.templateUrl;
-
             // check if 'Templates/editcourse.html' has been selected.
             // then update the selectedCourse object.
+            var template = $route.current.templateUrl;
             if (template.indexOf('editcourse') !== -1) {
                 var id = $routeParams.id;
                 for (i = 0; i < $scope.courses.length; i++) {
@@ -99,17 +95,14 @@
     });
 
     /*
-     * singleton service to retrieve the courses into memory.
+     * service to retrieve courses.
      */
     main.service('courseService', function (courseFactory) {
-        //courseFactory.query().success(function (response) {
-        //    $scope.courses = response;
-        //});  
-        //this.courses = [
-        //        { "CourseId": "1", "CourseCode": "COMSCI", "CourseName": "Computer Science" },
-        //        { "CourseId": "2", "CourseCode": "COE", "CourseName": "Engineering" },
-        //        { "CourseId": "3", "CourseCode": "BIO", "CourseName": "Biology" },
-        //];
+        this.courses = function () {
+            courseFactory.query().success(function (data) {
+                return data;
+            });
+        }
     });
 
     /*

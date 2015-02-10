@@ -3,9 +3,6 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container" ng-controller="courseController">
         <h1>Courses Management</h1>
-
-        <div ng-view></div>
-       
-        <%--<div ng-include="'Templates/course_list.html'"></div>--%>
+        <div ng-view></div>       
     </div>
 </asp:Content>
