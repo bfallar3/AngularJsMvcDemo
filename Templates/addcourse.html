@@ -1,0 +1,29 @@
+﻿<form name="addform" ng-submit="submit(addform.$invalid)" novalidate>
+    <div class="jumbotron">
+        ADD NEW COURSE
+        <br /><br />
+        <input type="number" name="newCourseId" class="form-control" placeholder="Enter course number..." 
+               ng-model="newCourseId" ng-required="true" /><br />
+        <div ng-show="addform.newCourseId.$error.required && submitted" class="has-error">Course number is required.</div>
+        <div ng-show="addform.newCourseId.$error.number && submitted" class="has-error">Course number must be integer.</div>
+        <br />
+        <input type="text" name="newCourseCode" class="form-control" placeholder="Enter course code..."
+               ng-model="newCourseCode" ng-required="true" /><br />
+        <div ng-show="addform.newCourseCode.$error.required && submitted" class="has-error">Course code is required.</div>
+        <br />
+        <input type="text" name="newCourseName" class="form-control" placeholder="Enter course name..."
+               ng-model="newCourseName" ng-required="true" /><br />
+        <div ng-show="addform.newCourseName.$error.required && submitted" class="has-error">Course title is required.</div>
+    </div>
+
+    <div>
+        <a href="#courses" class="btn btn-default">
+            Back
+            <i class="glyphicon glyphicon-backward"></i>
+        </a>
+        <button type="submit" class="btn btn-primary" ng-click="submitted=true" ng-disabled="addform.$invalid">
+            Save
+            <i class="glyphicon glyphicon-save"></i>
+        </button>
+    </div>
+</form>

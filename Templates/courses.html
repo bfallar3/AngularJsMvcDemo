@@ -1,0 +1,35 @@
+﻿<div class="jumbotron">LIST OF COURSES</div>
+
+<input class="form-control" type="text" placeholder="Search course..." ng-model="searchText" />
+<br />
+
+<table class="table table-hover table-condensed">
+    <thead>
+        <tr>
+            <td>Course ID</td>
+            <td>Course Code</td>
+            <td>Course Name</td>
+            <td>&nbsp;</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="course in courses | filter: searchText">
+            <td>{{course.CourseId}}</td>
+            <td>{{course.CourseCode}}</td>
+            <td>{{course.CourseName | uppercase}}</td>
+            <td>
+                <a href="#editCourse/{{course.CourseId}}" class="btn btn-sm btn-info">
+                    <i class="glyphicon glyphicon-edit"></i>
+                </a>
+
+                <button type="button" class="btn btn-sm btn-danger" ng-click="remove($index, course.CourseId)">
+                    <i class="glyphicon glyphicon-remove"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<a href="#addCourse" class="btn btn-primary">
+    <i class="glyphicon glyphicon-new-window"></i>&nbsp;ADD NEW COURSE
+</a>
